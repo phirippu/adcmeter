@@ -19,12 +19,14 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stm32_tm1637.h>
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "stm32f0xx_it.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -54,7 +56,12 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void EnableDebugRX(void) {
+    SET_BIT(huart1.Instance->CR1, USART_CR1_RXNEIE);
+}
+void DisableDebugRX(void) {
+    CLEAR_BIT(huart1.Instance->CR1, USART_CR1_RXNEIE);
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/

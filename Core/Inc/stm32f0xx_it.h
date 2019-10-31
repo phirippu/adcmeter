@@ -38,12 +38,15 @@
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+#define RXBUFSIZE 16
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-
+extern uint8_t rxBuffer[RXBUFSIZE];
+extern volatile uint8_t tick;
+extern volatile uint16_t adcIntValues[12];
+extern volatile uint8_t adc_busy;
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

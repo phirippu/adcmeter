@@ -42,7 +42,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+volatile uint8_t tick;
+uint8_t rxBuffer[RXBUFSIZE];
+volatile uint16_t adcIntValues[12];
+volatile uint8_t adc_busy;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
