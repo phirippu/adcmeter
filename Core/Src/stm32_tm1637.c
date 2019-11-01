@@ -1,4 +1,5 @@
 #include "stm32f0xx_hal.h"
+#include <stm32f0xx_it.h>
 
 #include "stm32_tm1637.h"
 #include "main.h"
@@ -13,7 +14,7 @@ void _tm1637Start(void);
 void _tm1637Stop(void);
 void _tm1637ReadResult(void);
 void _tm1637WriteByte(unsigned char b);
-void _tm1637DelayUsec(unsigned int i);
+void _tm1637DelayUsec(uint8_t i);
 void _tm1637ClkHigh(void);
 void _tm1637ClkLow(void);
 void _tm1637DioHigh(void);
@@ -140,13 +141,16 @@ void _tm1637WriteByte(unsigned char b)
     }
 }
 
-void _tm1637DelayUsec(unsigned int i)
+
+void _tm1637DelayUsec(uint8_t i)
 {
-    for (; i>0; i--) {
-        for (int j = 0; j < 10; ++j) {
-            __asm__ __volatile__("nop\n\t":::"memory");
-        }
-    }
+    tick = i;
+    while (tick);
+//    for (; i>0; i--) {
+//        for (int j = 0; j < 10; ++j) {
+//            __asm__ __volatile__("nop\n\t":::"memory");
+//        }
+//    }
 }
 
 void _tm1637ClkHigh(void)

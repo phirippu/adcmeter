@@ -12,7 +12,6 @@ HeaderFiles#7=/home/phil/git/adcmeter/Core/Inc/stm32f0xx_hal_conf.h
 HeaderFiles#8=/home/phil/git/adcmeter/Core/Inc/main.h
 HeaderFolderListSize=1
 HeaderPath#0=/home/phil/git/adcmeter/Core/Inc
-HeaderFiles=;
 SourceFileListSize=9
 SourceFiles#0=/home/phil/git/adcmeter/Core/Src/gpio.c
 SourceFiles#1=/home/phil/git/adcmeter/Core/Src/adc.c
@@ -25,6 +24,7 @@ SourceFiles#7=/home/phil/git/adcmeter/Core/Src/stm32f0xx_hal_msp.c
 SourceFiles#8=/home/phil/git/adcmeter/Core/Src/main.c
 SourceFolderListSize=1
 SourcePath#0=/home/phil/git/adcmeter/Core/Src
+HeaderFiles=;
 SourceFiles=;
 
 [PreviousLibFiles]

@@ -19,18 +19,16 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include <stm32_tm1637.h>
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "stm32f0xx_it.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32_tm1637.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +57,7 @@ void SystemClock_Config(void);
 void EnableDebugRX(void) {
     SET_BIT(huart1.Instance->CR1, USART_CR1_RXNEIE);
 }
+
 void DisableDebugRX(void) {
     CLEAR_BIT(huart1.Instance->CR1, USART_CR1_RXNEIE);
 }
@@ -69,71 +68,77 @@ void DisableDebugRX(void) {
 
 /* USER CODE END 0 */
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
 /**
   * @brief  The application entry point.
   * @retval int
   */
 int main(void)
 {
-    /* USER CODE BEGIN 1 */
+  /* USER CODE BEGIN 1 */
+    HAL_ADC_ConvCpltCallback(&hadc);
 
-    /* USER CODE END 1 */
+  /* USER CODE END 1 */
+  
 
+  /* MCU Configuration--------------------------------------------------------*/
 
-    /* MCU Configuration--------------------------------------------------------*/
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-    /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-    HAL_Init();
+  /* USER CODE BEGIN Init */
+    uint16_t time;
+  /* USER CODE END Init */
 
-    /* USER CODE BEGIN Init */
+  /* Configure the system clock */
+  SystemClock_Config();
 
-    /* USER CODE END Init */
+  /* USER CODE BEGIN SysInit */
 
-    /* Configure the system clock */
-    SystemClock_Config();
+  /* USER CODE END SysInit */
 
-    /* USER CODE BEGIN SysInit */
-
-    /* USER CODE END SysInit */
-
-    /* Initialize all configured peripherals */
-    MX_GPIO_Init();
-    MX_DMA_Init();
-    MX_ADC_Init();
-    MX_TIM3_Init();
-    MX_TIM17_Init();
-    MX_USART1_UART_Init();
-    /* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC_Init();
+  MX_TIM3_Init();
+  MX_TIM17_Init();
+  MX_USART1_UART_Init();
+  /* USER CODE BEGIN 2 */
 
     HAL_TIM_Base_Start_IT(&htim3);
     HAL_TIM_Base_Start_IT(&htim17);
 
+    HAL_ADCEx_Calibration_Start(&hadc);
     hadc.Instance->IER |= ADC_IER_EOSIE | ADC_IER_EOCIE;
+
+    time = HAL_ADC_Start_DMA(&hadc, (uint32_t *) adcIntValues, 4);
 
     HAL_UART_MspInit(&huart1);
 
     tm1637Init();
     tm1637SetBrightness(8);
-    tm1637DisplayDecimal(1000, 0);
+    tm1637DisplayDecimal(time, 0);
 
-    /* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-    /* Infinite loop */
-    /* USER CODE BEGIN WHILE */
-    while (1)
-    {
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+    while (1) {
+        if (adc_busy) {
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+            tm1637DisplayDecimal(adcIntValues[1], 0);
+            adc_busy = 0;
+            HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
+        }
     /* USER CODE END WHILE */
-    HAL_Delay(100);
-    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
-    HAL_Delay(100);
-    HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
+
     /* USER CODE BEGIN 3 */
     }
+#pragma clang diagnostic pop
   /* USER CODE END 3 */
 }
-#pragma clang diagnostic pop
 
 /**
   * @brief System Clock Configuration
@@ -196,7 +201,7 @@ void SystemClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+    /* User can add his own implementation to report the HAL error return state */
 
   /* USER CODE END Error_Handler_Debug */
 }

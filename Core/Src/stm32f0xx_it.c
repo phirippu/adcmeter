@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -153,7 +153,8 @@ void SysTick_Handler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-
+  if (hdma_adc.DmaBaseAddress->ISR & DMA_ISR_TCIF1)  {adc_busy = 1;}
+//    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
   /* USER CODE END DMA1_Channel1_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc);
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
@@ -167,6 +168,7 @@ void DMA1_Channel1_IRQHandler(void)
 void ADC1_IRQHandler(void)
 {
   /* USER CODE BEGIN ADC1_IRQn 0 */
+//    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 
   /* USER CODE END ADC1_IRQn 0 */
   HAL_ADC_IRQHandler(&hadc);
@@ -181,7 +183,8 @@ void ADC1_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-
+//    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+//    adc_busy = 1;
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */
@@ -195,7 +198,7 @@ void TIM3_IRQHandler(void)
 void TIM17_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM17_IRQn 0 */
-
+    if (tick) { tick--; }
   /* USER CODE END TIM17_IRQn 0 */
   HAL_TIM_IRQHandler(&htim17);
   /* USER CODE BEGIN TIM17_IRQn 1 */
