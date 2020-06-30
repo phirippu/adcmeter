@@ -41,8 +41,7 @@
 #define RXBUFSIZE 16
 /* USER CODE END EC */
 
-/* Exported macro ---------------------------------------    if (tick) { tick--; }
----------------------*/
+/* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 extern uint8_t rxBuffer[RXBUFSIZE];
 extern volatile uint8_t tick;
